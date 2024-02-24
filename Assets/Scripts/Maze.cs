@@ -36,12 +36,12 @@ public class Maze : MonoBehaviour
             for (int x = 0; x < sideSize; x++)
             {
                 // up walls
-                GameObject up = Instantiate(wallPrefab, new Vector3(x, y - 0.5f, -1f), Quaternion.identity);
+                GameObject up = Instantiate(wallPrefab, new Vector3(x, y - 0.5f, -0.5f), Quaternion.identity);
                 //up.transform.Rotate(new Vector3(0f, 0f, 0f));
                 horiWallsUp.Add(up);
 
                 // down walls
-                GameObject down = Instantiate(wallPrefab, new Vector3(x, y - 0.5f, -1f), Quaternion.identity);
+                GameObject down = Instantiate(wallPrefab, new Vector3(x, y - 0.5f, -0.5f), Quaternion.identity);
                 down.transform.Rotate(new Vector3(0f, 0f, 180f));
                 horiWallsDown.Add(down);
             }
@@ -54,12 +54,12 @@ public class Maze : MonoBehaviour
             for (int x = 0; x < sideSize+1; x++)
             {
                 // right walls
-                GameObject right = Instantiate(wallPrefab, new Vector3(x - 0.5f, y, -1f), Quaternion.identity);
+                GameObject right = Instantiate(wallPrefab, new Vector3(x - 0.5f, y, -0.5f), Quaternion.identity);
                 right.transform.Rotate(new Vector3(0f, 0f, 90f));
                 vertWallsRight.Add(right);
 
                 // left walls
-                GameObject left = Instantiate(wallPrefab, new Vector3(x - 0.5f, y, -1f), Quaternion.identity);
+                GameObject left = Instantiate(wallPrefab, new Vector3(x - 0.5f, y, -0.5f), Quaternion.identity);
                 left.transform.Rotate(new Vector3(0f, 0f, -90f));
                 vertWallsLeft.Add(left);
             }
@@ -101,7 +101,7 @@ public class Maze : MonoBehaviour
         stack.Push(start);
 
         int counter = 0;
-        while (true)
+        while (stack.Count > 0)
         {
             counter++;
 
@@ -134,22 +134,21 @@ public class Maze : MonoBehaviour
 
                 int limit = sideSize + 1;
                 int half = limit / 2;
-
+                Debug.Log(curr);
                 if (chosen.y == curr.y - 1) // north
                 {
-                    horiWallsUp[sideSize * ((int)curr.y - 1) + (int)curr.x].SetActive(false);
-                    horiWallsDown[sideSize * ((int)curr.y - 1) + (int)curr.x].SetActive(false);
+                    horiWallsUp[sideSize * ((int)curr.y) + (int)curr.x].SetActive(false);
+                    horiWallsDown[sideSize * ((int)curr.y) + (int)curr.x].SetActive(false);
                 }
                 else if (chosen.x == curr.x + 1) // east
                 {
-                    Debug.Log(curr);
                     vertWallsRight[(sideSize + 1) * (int)curr.y + ((int)curr.x + 1)].SetActive(false);
                     vertWallsLeft[(sideSize + 1) * (int)curr.y + ((int)curr.x + 1)].SetActive(false);
                 }
                 else if (chosen.y == curr.y + 1) // south
                 {
-                    horiWallsUp[sideSize * ((int)curr.y) + ((int)curr.x)].SetActive(false);
-                    horiWallsDown[sideSize * ((int)curr.y) + ((int)curr.x)].SetActive(false);
+                    horiWallsUp[sideSize * ((int)curr.y+1) + ((int)curr.x)].SetActive(false);
+                    horiWallsDown[sideSize * ((int)curr.y+1) + ((int)curr.x)].SetActive(false);
                 }
                 else if (chosen.x == curr.x - 1) // west
                 {
@@ -163,7 +162,7 @@ public class Maze : MonoBehaviour
             }
 
             //Debug.Log(counter);
-            yield return new WaitForSeconds(0.125f);
+            yield return new WaitForSeconds(0.005f);
         }
     }
 
