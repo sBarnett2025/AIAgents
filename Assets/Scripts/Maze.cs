@@ -10,17 +10,18 @@ public class Maze : MonoBehaviour
 {
     public int sideSize;
 
-    List<GameTile> tiles = new List<GameTile>();
+    public List<GameTile> tiles = new List<GameTile>();
     [SerializeField] GameObject tilePrefab;
+
+    // player
+    [SerializeField] Agent agent;
 
     // maze walls
     [SerializeField] GameObject wallPrefab;
-    List<GameObject> horiWallsUp = new List<GameObject>();
+    public List<GameObject> horiWallsUp = new List<GameObject>();
     List<GameObject> horiWallsDown = new List<GameObject>();
-    List<GameObject> vertWallsRight = new List<GameObject>();
+    public List<GameObject> vertWallsRight = new List<GameObject>();
     List<GameObject> vertWallsLeft = new List<GameObject>();
-
-
 
     // maze gen
     Stack<Vector2Int> stack = new Stack<Vector2Int>();
@@ -100,11 +101,8 @@ public class Maze : MonoBehaviour
     {
         stack.Push(start);
 
-        int counter = 0;
         while (stack.Count > 0)
         {
-            counter++;
-
             Vector2Int curr = stack.Peek();
             visited[curr] = true;
             //tiles[(int)curr.y * mazeHeight + (int)curr.x].state = TileState.VISITED;
@@ -113,7 +111,6 @@ public class Maze : MonoBehaviour
             if (neighbors.Count == 0)
             {
                 //stack
-                //Debug.Log("no neighbors?");
                 stack.Pop();
                 tiles[(int)curr.y * sideSize + (int)curr.x].state = TileState.FLOOR;
             }
@@ -155,15 +152,17 @@ public class Maze : MonoBehaviour
                     vertWallsRight[(sideSize + 1) * (int)curr.y + (int)curr.x].SetActive(false);
                     vertWallsLeft[(sideSize + 1) * (int)curr.y + (int)curr.x].SetActive(false);
                 }
-                //Debug.Log(curr);
                 tiles[(int)curr.y * sideSize + (int)curr.x].state = TileState.VISITED;
 
                 stack.Push(chosen);
             }
 
-            //Debug.Log(counter);
             yield return new WaitForSeconds(0.005f);
         }
+
+        tiles[0].state = TileState.START;
+        tiles[sideSize * sideSize - 1].state = TileState.END;
+        agent.gameObject.SetActive(true);
     }
 
     List<Vector2Int> GetNeighbors(Vector2Int point)
