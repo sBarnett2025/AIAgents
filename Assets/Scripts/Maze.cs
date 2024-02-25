@@ -25,7 +25,7 @@ public class Maze : MonoBehaviour
 
     // maze gen
     Stack<Vector2Int> stack = new Stack<Vector2Int>();
-    Dictionary<Vector2Int, bool> visited = new Dictionary<Vector2Int, bool>();
+    public Dictionary<Vector2Int, bool> visited = new Dictionary<Vector2Int, bool>();
 
     // Start is called before the first frame update
     void Start()

@@ -153,8 +153,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sideSize: 21
+  tiles: []
   tilePrefab: {fileID: 7475389863530015665, guid: 8d9bf026706501a49a189e612041c7ff, type: 3}
+  agent: {fileID: 626715222}
   wallPrefab: {fileID: 1906325842475862879, guid: d347d14d47f38394e881770bd5b9d7ff, type: 3}
+  horiWallsUp: []
+  vertWallsRight: []
 --- !u!4 &593710452
 Transform:
   m_ObjectHideFlags: 0
@@ -182,13 +186,14 @@ GameObject:
   - component: {fileID: 626715220}
   - component: {fileID: 626715219}
   - component: {fileID: 626715218}
+  - component: {fileID: 626715222}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &626715218
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -275,6 +280,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &626715222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 626715217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49db08537b217954c882d578f23cf797, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maze: {fileID: 593710451}
+  timeDelay: 0.5
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
