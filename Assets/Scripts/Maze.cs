@@ -131,7 +131,7 @@ public class Maze : MonoBehaviour
 
                 int limit = sideSize + 1;
                 int half = limit / 2;
-                Debug.Log(curr);
+                //Debug.Log(curr);
                 if (chosen.y == curr.y - 1) // north
                 {
                     horiWallsUp[sideSize * ((int)curr.y) + (int)curr.x].SetActive(false);
