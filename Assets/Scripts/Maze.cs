@@ -26,6 +26,7 @@ public class Maze : MonoBehaviour
     // maze gen
     Stack<Vector2Int> stack = new Stack<Vector2Int>();
     public Dictionary<Vector2Int, bool> visited = new Dictionary<Vector2Int, bool>();
+    [SerializeField] float delay;
 
     // Start is called before the first frame update
     void Start()
@@ -94,10 +95,10 @@ public class Maze : MonoBehaviour
         ClearMaze();
 
         Vector2Int start = new Vector2Int(0, 0);
-        StartCoroutine(ReverseBackTracker(start));
+        StartCoroutine(ReverseBackTracker(start, delay));
     }
 
-    IEnumerator ReverseBackTracker(Vector2Int start)
+    IEnumerator ReverseBackTracker(Vector2Int start, float timeDelay)
     {
         stack.Push(start);
 
@@ -157,7 +158,7 @@ public class Maze : MonoBehaviour
                 stack.Push(chosen);
             }
 
-            yield return new WaitForSeconds(0.005f);
+            yield return new WaitForSeconds(timeDelay);
         }
 
         tiles[0].state = TileState.START;
