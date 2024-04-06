@@ -43,6 +43,7 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(optionsFound.Count);
         if (state == AgentState.STANDBY)
         {
 
@@ -67,6 +68,8 @@ public class Agent : MonoBehaviour
         state = AgentState.STANDBY;
 
         ResetVisited();
+        cameFrom.Clear();
+        costSoFar.Clear();
 
         Vector2Int start = new Vector2Int((int)transform.position.x, (int)transform.position.y);
         Vector2Int curr = start;
@@ -87,6 +90,7 @@ public class Agent : MonoBehaviour
 
             if (c.Value == end)
             {
+                Debug.Log("end found----------------------------");
                 break;
             }
 
@@ -155,13 +159,34 @@ public class Agent : MonoBehaviour
 
         neigh = GetNeighbors(maze.visited, v);
         maze.visited[v] = true;
+
+        bool end = false;
+
         while (neigh.Count > 0)
         {
-            //Vector2Int chosen = from;
-            int randomNum = Random.Range(0, 100);
-            int index = randomNum % neigh.Count;
+            Vector2Int chosen = new Vector2Int(0,0);
+            
 
-            Vector2Int chosen = neigh[index];
+            foreach (Vector2Int n in neigh)
+            {
+                if (maze.tiles[maze.sideSize * n.y + n.x].state == TileState.END)
+                {
+                    chosen = n;
+                    transform.position = new Vector3(chosen.x, chosen.y, transform.position.z);
+                    end = true;
+                    break;
+                }
+
+            }
+
+            //Vector2Int chosen = from;
+            if (!end)
+            {
+                int randomNum = Random.Range(0, 100);
+                int index = randomNum % neigh.Count;
+
+                chosen = neigh[index];
+            }
 
             foreach (Vector2Int n in neigh)
             {
@@ -184,7 +209,11 @@ public class Agent : MonoBehaviour
             yield return new WaitForSeconds(delay);
         }
 
-        state = AgentState.PATHFINDING;
+        if (!end)
+        {
+            state = AgentState.PATHFINDING;
+        }
+        
         Debug.Log("Done Exploring");
     }
 
