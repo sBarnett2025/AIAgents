@@ -29,7 +29,7 @@ public class Agent : MonoBehaviour
     Dictionary<Vector2Int, Vector2Int> cameFrom = new Dictionary<Vector2Int, Vector2Int>();
     Dictionary<Vector2Int, float> costSoFar = new Dictionary<Vector2Int, float>();
 
-    Stack<Vector2Int> path = new Stack<Vector2Int>();
+    public Stack<Vector2Int> path = new Stack<Vector2Int>();
 
 
     // Start is called before the first frame update
@@ -43,7 +43,7 @@ public class Agent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(optionsFound.Count);
+        //Debug.Log(optionsFound.Count);
         if (state == AgentState.STANDBY)
         {
 
@@ -79,12 +79,11 @@ public class Agent : MonoBehaviour
         costSoFar[curr] = 0;
         frontier.Enqueue(new KeyValuePair<float, Vector2Int>(0f, curr));
 
-        maze.tiles[maze.sideSize * end.y + end.x].state = TileState.TRAVELED;
+        maze.tiles[maze.sideSize * end.y + end.x].state = TileState.OPTION_FOUND;
 
         while (frontier.list.Count > 0)
         {
             //Debug.Log(frontier.list.Count);
-            yield return new WaitForSeconds(0f);
 
             KeyValuePair<float, Vector2Int> c = frontier.Dequeue();
 
@@ -112,43 +111,44 @@ public class Agent : MonoBehaviour
         curr = end;
         while (curr != start)
         {
-            //Debug.Log(curr);
+            Debug.Log(curr);
             path.Push(curr);
-            //maze.tiles[maze.sideSize * curr.y + curr.x].state = TileState.TRAVELED;
+            //maze.tiles[maze.sideSize * curr.y + curr.x].state = TileState.OPTION_FOUND;
             //Debug.Log(cameFrom[curr]);
             curr = cameFrom[curr];
+            //yield return new WaitForSeconds(delay);
         }
-        path.Push(start);
+        //path.Push(start);
 
-
-
+        yield return new WaitForSeconds(0f);
         state = AgentState.MOVING;
         Debug.Log("done pathfinding");
     }
 
     IEnumerator MoveOnPath(float delay)
     {
-        Debug.Log("start move");
+        Debug.Log("Start Move");
         state = AgentState.STANDBY;
 
         while (path.Count > 0)
         {
-            yield return new WaitForSeconds(delay);
-
             //Debug.Log(path.Peek());
-
             Vector2Int curr = path.Pop();
 
             transform.position = new Vector3(curr.x, curr.y, transform.position.z);
+            maze.tiles[maze.sideSize * curr.y + curr.x].state = TileState.VISITED;
+
+            yield return new WaitForSeconds(delay);
         }
         path.Clear();
 
         state = AgentState.EXPLORING;
-        Debug.Log("done move");
+        Debug.Log("Done Move");
     }
 
     IEnumerator Explore(float delay)
     {
+        Debug.Log("Start Exploring");
         ResetVisited();
         state = AgentState.STANDBY;
         List<Vector2Int> neigh = new List<Vector2Int>();

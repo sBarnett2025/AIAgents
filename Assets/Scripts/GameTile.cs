@@ -10,7 +10,7 @@ public enum TileState
     FLOOR,
     START,
     END,
-    TRAVELED
+    OPTION_FOUND
 }
 
 public class GameTile : MonoBehaviour
@@ -34,7 +34,7 @@ public class GameTile : MonoBehaviour
                 gameObject.GetComponent<Renderer>().material = mats[0]; // white
                 break;
             case TileState.VISITED:
-                gameObject.GetComponent<Renderer>().material = mats[1]; // purple
+                gameObject.GetComponent<Renderer>().material = mats[1]; // pink
                 break;
             case TileState.FLOOR:
                 gameObject.GetComponent<Renderer>().material = mats[2]; // blue
@@ -45,7 +45,7 @@ public class GameTile : MonoBehaviour
             case TileState.END:
                 gameObject.GetComponent<Renderer>().material = mats[4]; // red
                 break;
-            case TileState.TRAVELED:
+            case TileState.OPTION_FOUND:
                 gameObject.GetComponent<Renderer>().material = mats[5]; // yellow
                 break;
             default:
