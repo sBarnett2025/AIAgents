@@ -24,6 +24,7 @@ public class Agent : MonoBehaviour
 
     // exploring options
     Stack<Vector2Int> optionsFound = new Stack<Vector2Int>();
+    public Vector2Int cameFromExplore;
 
     // pathfinding
     Dictionary<Vector2Int, Vector2Int> cameFrom = new Dictionary<Vector2Int, Vector2Int>();
@@ -35,8 +36,9 @@ public class Agent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        firstStart = new Vector2Int(0, 0);
-        finalEnd = new Vector2Int(maze.sideSize, maze.sideSize);
+        firstStart = maze.playerStart;
+        transform.position = new Vector3(firstStart.x, firstStart.y, transform.position.z);
+        finalEnd = maze.playerEnd;
         state = AgentState.EXPLORING;
     }
 
@@ -50,19 +52,19 @@ public class Agent : MonoBehaviour
         }
         else if (state == AgentState.PATHFINDING)
         {
-            StartCoroutine(FindPath(timeDelay));
+            StartCoroutine(FindPath());
         }
         else if (state == AgentState.MOVING)
         {
-            StartCoroutine(MoveOnPath(timeDelay));
+            StartCoroutine(MoveOnPath());
         }
         else if (state == AgentState.EXPLORING)
         {
-            StartCoroutine(Explore(timeDelay));
+            StartCoroutine(Explore());
         }
     }
 
-    IEnumerator FindPath(float delay)
+    IEnumerator FindPath()
     {
         Debug.Log("start pathfinding");
         state = AgentState.STANDBY;
@@ -125,7 +127,7 @@ public class Agent : MonoBehaviour
         Debug.Log("done pathfinding");
     }
 
-    IEnumerator MoveOnPath(float delay)
+    IEnumerator MoveOnPath()
     {
         Debug.Log("Start Move");
         state = AgentState.STANDBY;
@@ -138,7 +140,12 @@ public class Agent : MonoBehaviour
             transform.position = new Vector3(curr.x, curr.y, transform.position.z);
             maze.tiles[maze.sideSize * curr.y + curr.x].state = TileState.VISITED;
 
-            yield return new WaitForSeconds(delay);
+            if (path.Count != 0)
+            {
+                cameFromExplore = curr;
+            }
+
+            yield return new WaitForSeconds(timeDelay);
         }
         path.Clear();
 
@@ -146,7 +153,7 @@ public class Agent : MonoBehaviour
         Debug.Log("Done Move");
     }
 
-    IEnumerator Explore(float delay)
+    IEnumerator Explore()
     {
         Debug.Log("Start Exploring");
         ResetVisited();
@@ -158,6 +165,7 @@ public class Agent : MonoBehaviour
         //Vector2Int from = cameFrom[v];
 
         neigh = GetNeighbors(maze.visited, v);
+        maze.visited[cameFromExplore] = true;
         maze.visited[v] = true;
 
         bool end = false;
@@ -186,6 +194,8 @@ public class Agent : MonoBehaviour
                 int index = randomNum % neigh.Count;
 
                 chosen = neigh[index];
+
+                Debug.Log(chosen);
             }
 
             foreach (Vector2Int n in neigh)
@@ -206,7 +216,7 @@ public class Agent : MonoBehaviour
             neigh.Clear();
             neigh = GetNeighbors(maze.visited, chosen);
 
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(timeDelay);
         }
 
         if (!end)
@@ -242,6 +252,12 @@ public class Agent : MonoBehaviour
         //Debug.Log("-------------------");
         foreach (Vector2Int p in canidates)
         {
+            if (p.x == cameFromExplore.x && p.y == cameFromExplore.y)
+            {
+                continue;
+            }
+
+
             if (point.y + 1 == p.y) // up
             {
                 if (!PointIsValid(p))

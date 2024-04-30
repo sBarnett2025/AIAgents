@@ -28,6 +28,9 @@ public class Maze : MonoBehaviour
     public Dictionary<Vector2Int, bool> visited = new Dictionary<Vector2Int, bool>();
     [SerializeField] float delay;
 
+    // start/end
+    public Vector2Int playerStart, playerEnd;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -161,8 +164,14 @@ public class Maze : MonoBehaviour
             yield return new WaitForSeconds(timeDelay);
         }
 
-        tiles[0].state = TileState.START;
-        tiles[sideSize * sideSize - 1].state = TileState.END;
+        // setup star/end
+        int randOne = Random.Range(0, sideSize*sideSize);
+        int randTwo = Random.Range(0, sideSize * sideSize);
+        tiles[randOne].state = TileState.START;
+        tiles[randTwo].state = TileState.END;
+        playerStart = new Vector2Int((int)tiles[randOne].transform.position.x, (int)tiles[randOne].transform.position.y);
+        playerEnd = new Vector2Int((int)tiles[randTwo].transform.position.x, (int)tiles[randTwo].transform.position.y);
+
         agent.gameObject.SetActive(true);
     }
 
