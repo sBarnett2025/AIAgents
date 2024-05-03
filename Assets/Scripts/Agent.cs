@@ -85,8 +85,7 @@ public class Agent : MonoBehaviour
 
         while (frontier.list.Count > 0)
         {
-            //Debug.Log(frontier.list.Count);
-
+            Debug.Log(frontier.list.Count);
             KeyValuePair<float, Vector2Int> c = frontier.Dequeue();
 
             if (c.Value == end)
@@ -98,6 +97,8 @@ public class Agent : MonoBehaviour
             // create path
             foreach (Vector2Int next in GetNeighbors(maze.visited, c.Value))
             {
+                Debug.Log(c.Value);
+                Debug.Log(next);
                 float newCost = costSoFar[c.Value] + GetDistance(c.Value, next);
                 if (!costSoFar.ContainsKey(next) || newCost < costSoFar[next])
                 {
@@ -107,6 +108,7 @@ public class Agent : MonoBehaviour
                     cameFrom[next] = c.Value;
                 }
             }
+            Debug.Log(frontier.list.Count);
         }
 
         path.Clear();
@@ -256,7 +258,6 @@ public class Agent : MonoBehaviour
             {
                 continue;
             }
-
 
             if (point.y + 1 == p.y) // up
             {

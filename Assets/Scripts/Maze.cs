@@ -167,9 +167,9 @@ public class Maze : MonoBehaviour
         // setup star/end
         int randOne = Random.Range(0, sideSize*sideSize);
         int randTwo = Random.Range(0, sideSize * sideSize);
-        tiles[randOne].state = TileState.START;
+        tiles[0].state = TileState.START;
         tiles[randTwo].state = TileState.END;
-        playerStart = new Vector2Int((int)tiles[randOne].transform.position.x, (int)tiles[randOne].transform.position.y);
+        playerStart = new Vector2Int(0, 0);
         playerEnd = new Vector2Int((int)tiles[randTwo].transform.position.x, (int)tiles[randTwo].transform.position.y);
 
         agent.gameObject.SetActive(true);
